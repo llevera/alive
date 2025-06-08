@@ -1,0 +1,515 @@
+[
+  {
+    "scene_description": "Meeting Schedule: User wants to book a meeting and requires authentication first, then adding the meeting, and finally querying to confirm.",
+    "initial_user_utterance": "Can you please do a meeting booking for me?",
+    "relevant_key_info_for_scenario_understanding": {
+        "user_credentials": {
+            "username": "JohnDoe",
+            "password": "pass123",
+            "email":"johndoe@example.com"
+        },
+        "meeting_details": {
+            "meeting_topic": "Quarterly Sales Review",
+            "start_time": "2023-04-15 09:00",
+            "end_time": "2023-04-15 11:00",
+            "location": "Conference Room 2",
+            "attendees": ["JohnDoe", "AliceSmith", "BobJohnson"]
+        }
+    },
+    "dialogue_context_for_llm_input": [
+        {"role": "User", "text": "Can you please do a meeting booking for me?"}
+    ],
+    "apis": [
+      {
+        "api_name": "GetUserToken",
+        "input": {
+            "username": "JohnDoe",
+            "password": "pass123"
+        },
+        "output": { "token": "a9s8d7f6g5h4j3k2l1" }
+      },
+      {
+        "api_name": "AddMeeting",
+        "input": {
+            "token": "a9s8d7f6g5h4j3k2l1",
+            "meeting_topic": "Quarterly Sales Review",
+            "start_time": "2023-04-15 09:00:00",
+            "end_time": "2023-04-15 11:00:00",
+            "location": "Conference Room 2",
+            "attendees": ["JohnDoe", "AliceSmith", "BobJohnson"]
+        },
+        "output": "success"
+      }
+    ],
+    "expected_final_ai_response_after_all_apis": "The 'Quarterly Sales Review' meeting scheduled for April 15, 2023, from 9:00 AM to 11:00 AM in Conference Room 2, with attendees JohnDoe, AliceSmith, and BobJohnson, has been successfully booked and confirmed."
+  },
+  {
+    "scene_description": "Personal Assistant: Help user organize their schedule for tomorrow involving a meeting, reminder, and alarm.",
+    "initial_user_utterance": "Help me organize my schedule for tomorrow.",
+    "relevant_key_info_for_scenario_understanding": {
+        "user_credentials": {
+            "username": "JohnDoe",
+            "password": "pass123",
+            "email": "johndoe@example.com"
+        },
+        "meeting_details": {
+            "topic": "Meeting with Boss",
+            "time": "2023-03-31 10:00",
+            "location": "Beijing Hilton Hotel 2nd Floor"
+        }
+    },
+    "dialogue_context_for_llm_input": [
+        {"role": "User", "text": "Help me organize my schedule for tomorrow."}
+    ],
+    "apis": [
+        {
+            "api_name": "GetUserToken",
+            "input": {
+                "username": "JohnDoe",
+                "password": "pass123"
+            },
+            "output": { "token": "a9s8d7f6g5h4j3k2l1", "message": "获取用户令牌" }
+        },
+        {
+            "api_name": "AddMeeting",
+            "input": {
+                "token": "a9s8d7f6g5h4j3k2l1",
+                "meeting_topic": "Meeting with Boss",
+                "start_time": "2023-03-31 10:00:00",
+                "end_time": "2023-03-31 11:00:00",
+                "location": "Beijing Hilton Hotel 2nd Floor",
+                "attendees": ["JohnDoe"]
+            },
+            "output": "success"
+        },
+        {
+            "api_name": "AddReminder",
+            "input": {
+                "token": "a9s8d7f6g5h4j3k2l1",
+                "content": "Prepare for meeting with Boss",
+                "time": "2023-03-31 09:00:00"
+            },
+            "output": "success"
+        },
+        {
+            "api_name": "AddAlarm",
+            "input": {
+                "token": "a9s8d7f6g5h4j3k2l1",
+                "time": "2023-03-31 08:00:00"
+            },
+            "output": { "status": "success", "message": "添加闹钟，让用户在会议当天早上8点起床准备" }
+        }
+    ],
+    "expected_final_ai_response_after_all_apis": "Your schedule for tomorrow is organized with the meeting, reminder, and alarm set."
+  },
+  {
+    "scene_description": "Financial Management: Help user check their bank balance considering income and expenses, and set a reminder for a credit card bill.",
+    "initial_user_utterance": "Help me check the remaining money in the bank this month.",
+    "relevant_key_info_for_scenario_understanding": {
+        "user_credentials": {
+            "username": "JohnDoe",
+            "password": "pass123",
+            "email": "johndoe@example.com"
+        },
+        "financial_info": {
+            "bank": "Bank of China",
+            "current_balance_usd": 5000,
+            "monthly_salary_usd": 3000,
+            "monthly_expenses_usd": 2000,
+            "credit_card_payment_time": "2023-04-15 00:00:00"
+        }
+    },
+    "dialogue_context_for_llm_input": [
+        {"role": "User", "text": "Help me check the remaining money in the bank this month."}
+    ],
+    "apis": [
+        {
+            "api_name": "GetUserToken",
+            "input": {
+                "username": "JohnDoe",
+                "password": "pass123"
+            },
+            "output": { "token": "a9s8d7f6g5h4j3k2l1" }
+        },
+        {
+            "api_name": "QueryBalance",
+            "input": {
+                "token": "a1b2c3d4e5f6" 
+            },
+            "output": { "balance": 5000, "currency": "USD" }
+        },
+        {
+            "api_name": "Calculator",
+            "input": {
+                "formula": "5000+3000-2000"
+            },
+            "output": { "result": 6000 }
+        },
+        {
+            "api_name": "AddReminder",
+            "input": {
+                "token": "a9s8d7f6g5h4j3k2l1",
+                "content": "Pay credit card bill",
+                "time": "2023-04-15 00:00:00"
+            },
+            "output": "success"
+        }
+    ],
+    "expected_final_ai_response_after_all_apis": "Your financial status has been reviewed, and a reminder for your credit card payment is set."
+  },
+  {
+    "scene_description": "Reminder Service: Help user set up reminders for upcoming appointments.",
+    "initial_user_utterance": "Help me set up reminders for my upcoming appointments.",
+    "relevant_key_info_for_scenario_understanding": {
+        "user_credentials": {
+            "username": "JohnDoe",
+            "password": "pass123",
+            "email": "johndoe@example.com"
+        },
+        "appointments": [
+            {
+                "patient_name": "Jane Doe",
+                "doctor_name": "Dr. Smith",
+                "appointment_date": "2023-04-05 09:00:00"
+            },
+            {
+                "patient_name": "Jane Doe",
+                "doctor_name": "Dr. Johnson",
+                "appointment_date": "2023-04-12 13:30:00"
+            }
+        ]
+    },
+    "dialogue_context_for_llm_input": [
+        {"role": "User", "text": "Help me set up reminders for my upcoming appointments."}
+    ],
+    "apis": [
+        {
+            "api_name": "GetUserToken",
+            "input": {
+                "username": "JohnDoe",
+                "password": "pass123"
+            },
+            "output": { "token": "a9s8d7f6g5h4j3k2l1" }
+        },
+        {
+            "api_name": "AddReminder",
+            "input": {
+                "token": "a9s8d7f6g5h4j3k2l1",
+                "content": "Appointment with Dr. Smith",
+                "time": "2023-04-05 09:00:00"
+            },
+            "output": "success"
+        },
+        {
+            "api_name": "AddReminder",
+            "input": {
+                "token": "a9s8d7f6g5h4j3k2l1",
+                "content": "Appointment with Dr. Johnson",
+                "time": "2023-04-12 13:30:00"
+            },
+            "output": "success"
+        }
+    ],
+    "expected_final_ai_response_after_all_apis": "Reminders for your appointments with Dr. Smith and Dr. Johnson have been set."
+  },
+  {
+    "scene_description": "Go To Hospital: Help user schedule a hospital appointment, search for symptoms, and add it to their agenda.",
+    "initial_user_utterance": "Help me schedule an appointment at Beijing Hospital.",
+    "relevant_key_info_for_scenario_understanding": {
+        "user_credentials": {
+            "username": "JohnDoe",
+            "password": "pass123",
+            "email": "johndoe@example.com"
+        },
+        "appointment_details": {
+            "hospital_name": "Beijing Hospital",
+            "appointment_date": "2023-04-01",
+            "appointment_time": "11:00",
+            "doctor_name": "Dr. Zhang",
+            "medical_symptoms": ["fever", "cough", "headache"]
+        }
+    },
+    "dialogue_context_for_llm_input": [
+        {"role": "User", "text": "Help me schedule an appointment at Beijing Hospital."}
+    ],
+    "apis": [
+        {
+            "api_name": "AppointmentRegistration",
+            "input": {
+                "patient_name": "John Doe",
+                "date": "2023-04-01",
+                "doctor_name": "Dr. Zhang"
+            },
+            "output": "appt_123"
+        },
+        {
+            "api_name": "SymptomSearch",
+            "input": {
+                "symptom": "headache"
+            },
+            "output": { "possible_causes": ["stress", "migraine"], "advice": "Rest and drink water." }
+        },
+        {
+            "api_name": "GetUserToken",
+            "input": {
+                "username": "JohnDoe",
+                "password": "pass123"
+            },
+            "output": { "token": "a9s8d7f6g5h4j3k2l1" }
+        },
+        {
+            "api_name": "AddAgenda",
+            "input": {
+                "token": "a9s8d7f6g5h4j3k2l1",
+                "content": "Hospital Appointment",
+                "time": "2023-04-01 11:00:00",
+                "location": "Beijing Hospital"
+            },
+            "output": { "status": "success" }
+        }
+    ],
+    "expected_final_ai_response_after_all_apis": "Your appointment at Beijing Hospital with Dr. Zhang is scheduled for April 1, 2023, at 11:00 AM and added to your agenda. Information on headaches has also been provided."
+  },
+  {
+    "scene_description": "Health Management: Record health data, query past data, and set medication reminders/alarms.",
+    "initial_user_utterance": "Hello! Can you please help me record my health condition with your tools and services?",
+    "relevant_key_info_for_scenario_understanding": {
+        "user_credentials": {
+            "username": "JohnDoe",
+            "password": "pass123",
+            "token": "a9s8d7f6g5h4j3k2l1",
+            "email": "johndoe@example.com"
+        },
+        "health_devices_available": [
+            "Blood Pressure Monitor", "Smart Scale", "Glucometer", "Fitbit Tracker"
+        ],
+        "current_health_reading": {
+            "time": "2023-03-31 08:00:00",
+            "data": {"systolic_blood_pressure": 120, "diastolic_blood_pressure": 80}
+        },
+        "medication_reminder_details":{
+            "content": "Take medication",
+            "time": "2023-03-31 09:00:00"
+        },
+        "general_alarm_time": "2023-04-01 09:00:00"
+    },
+    "dialogue_context_for_llm_input": [
+        {"role": "User", "text": "Hello! Can you please help me record my health condition with your tools and services?"}
+    ],
+    "apis": [
+        {
+            "api_name": "RecordHealthData",
+            "input": {
+                "user_id": "JohnDoe",
+                "time": "2023-03-31 08:00:00",
+                "health_data": {"systolic_blood_pressure": 120, "diastolic_blood_pressure": 80}
+            },
+            "output": { "status": "success" }
+        },
+        {
+            "api_name": "QueryHealthData",
+            "input": {
+                "user_id": "JohnDoe",
+                "start_time": "2023-03-01",
+                "end_time": "2023-03-31"
+            },
+            "output": { "status": "success", "data_points": 5 }
+        },
+        {
+            "api_name": "AddReminder",
+            "input": {
+                "token": "a9s8d7f6g5h4j3k2l1",
+                "content": "Take medication",
+                "time": "2023-03-31 09:00:00"
+            },
+            "output": "success"
+        },
+        {
+            "api_name": "AddAlarm",
+            "input": {
+                "token": "a9s8d7f6g5h4j3k2l1",
+                "time": "2023-04-01 09:00:00"
+            },
+            "output": { "status": "success" }
+        }
+    ],
+    "expected_final_ai_response_after_all_apis": "Your health data has been recorded, past data queried, and reminders/alarms have been set as requested."
+  },
+  {
+    "scene_description": "Shopping: Create an agenda for a shopping trip, set budget reminders, and check bank balance.",
+    "initial_user_utterance": "Create an agenda for me about my shopping trip.",
+    "relevant_key_info_for_scenario_understanding": {
+        "user_credentials": {
+            "username": "JohnDoe",
+            "password": "pass123",
+            "email": "johndoe@example.com"
+        },
+        "trip_details": {
+            "shopping_mall_name": "XYZ Mall",
+            "date": "2023-04-02",
+            "items_to_buy": ["clothes", "shoes", "groceries"],
+            "budget_cny": 5000,
+            "payment_method": "Credit card"
+        }
+    },
+    "dialogue_context_for_llm_input": [
+        {"role": "User", "text": "Create an agenda for me about my shopping trip."}
+    ],
+    "apis": [
+        {
+            "api_name": "GetUserToken",
+            "input": {
+                "username": "JohnDoe",
+                "password": "pass123"
+            },
+            "output": { "token": "b9c8d7e6f5g4h3i2j1" } 
+        },
+        {
+            "api_name": "AddAgenda",
+            "input": {
+                "token": "b9c8d7e6f5g4h3i2j1",
+                "content": "Go shopping at XYZ Mall",
+                "time": "2023-04-02 10:00:00",
+                "location": "XYZ Mall"
+            },
+            "output": { "status": "success" }
+        },
+        {
+            "api_name": "AddReminder",
+            "input": {
+                "token": "b9c8d7e6f5g4h3i2j1",
+                "content": "Don't forget to bring the credit card",
+                "time": "2023-04-02 10:00:00"
+            },
+            "output": "success"
+        },
+        {
+            "api_name": "AddReminder",
+            "input": {
+                "token": "b9c8d7e6f5g4h3i2j1",
+                "content": "Stick to the budget of 5000 CNY",
+                "time": "2023-04-02 10:00:00"
+            },
+            "output": "success"
+        },
+        {
+            "api_name": "QueryBalance",
+            "input": {
+                "token": "b9c8d7e6f5g4h3i2j1"
+            },
+            "output": { "balance": 10000, "currency": "CNY" }
+        },
+        {
+            "api_name": "QueryAgenda",
+            "input": {
+                "token": "b9c8d7e6f5g4h3i2j1",
+                "content": "Go shopping at XYZ Mall",
+                "time": "2023-04-02 10:00:00",
+                "location": "XYZ Mall"
+            },
+            "output": { "status": "success", "agenda_item_found": true }
+        }
+    ],
+    "expected_final_ai_response_after_all_apis": "Your shopping trip to XYZ Mall is on the agenda for April 2, 2023, with reminders for your credit card and budget. Your current balance has also been checked."
+  },
+  {
+    "scene_description": "Hotel Booking: Plan a business trip involving hotel booking, adding to agenda, meeting scheduling, and setting an alarm.",
+    "initial_user_utterance": "Please help me plan my business trip next week.",
+    "relevant_key_info_for_scenario_understanding": {
+        "user_credentials": {
+            "username": "JohnDoe",
+            "password": "pass123",
+            "token": "a9s8d7f6g5h4j3k2l1",
+            "email": "johndoe@example.com"
+        },
+        "hotel_booking_details": {
+            "hotel_name": "Beijing Hilton Hotel",
+            "check_in_date": "2023-03-30",
+            "check_out_date": "2023-04-01",
+            "adults": 1,
+            "rooms": 1
+        },
+        "agenda_item": {
+            "content": "Check in",
+            "time": "2023-03-30 12:00:00",
+            "location": "Beijing Hilton Hotel"
+        },
+        "meeting_details": {
+            "topic": "Meeting with Boss",
+            "start_time": "2023-03-31 10:00:00",
+            "end_time": "2023-03-31 11:00:00",
+            "location": "Beijing Hilton Hotel 2nd Floor",
+            "attendees": ["JohnDoe"]
+        },
+        "alarm_time": "2023-03-30 08:00:00"
+    },
+    "dialogue_context_for_llm_input": [
+        {"role": "User", "text": "Please help me plan my business trip next week."}
+    ],
+    "apis": [
+        {
+            "api_name": "BookHotel",
+            "input": {
+                "hotel_name": "Beijing Hilton Hotel",
+                "check_in_time": "2023-03-30",
+                "check_out_time": "2023-04-01",
+                "room_count": 1,
+                "adult_count": 1,
+                "child_count": 0
+            },
+            "output": "hotel_book_456"
+        },
+        {
+            "api_name": "GetUserToken",
+            "input": {
+                "username": "JohnDoe",
+                "password": "pass123"
+            },
+            "output": { "token": "a9s8d7f6g5h4j3k2l1" }
+        },
+        {
+            "api_name": "AddAgenda",
+            "input": {
+                "token": "a9s8d7f6g5h4j3k2l1",
+                "content": "Check in",
+                "time": "2023-03-30 12:00:00",
+                "location": "Beijing Hilton Hotel"
+            },
+            "output": { "status": "success" }
+        },
+        {
+            "api_name": "AddMeeting",
+            "input": {
+                "token": "a9s8d7f6g5h4j3k2l1",
+                "meeting_topic": "Meeting with Boss",
+                "start_time": "2023-03-31 10:00:00",
+                "end_time": "2023-03-31 11:00:00",
+                "location": "Beijing Hilton Hotel 2nd Floor",
+                "attendees": ["JohnDoe"]
+            },
+            "output": "success"
+        },
+        {
+            "api_name": "QueryMeeting",
+            "input": {
+                "token": "a9s8d7f6g5h4j3k2l1",
+                "meeting_topic": "Meeting with Boss",
+                "start_time": "2023-03-31 10:00:00",
+                "end_time": "2023-03-31 11:00:00",
+                "location": "Beijing Hilton Hotel 2nd Floor",
+                "attendees": ["JohnDoe"]
+            },
+            "output": { "status": "success", "meeting_found": true }
+        },
+        {
+            "api_name": "AddAlarm",
+            "input": {
+                "token": "a9s8d7f6g5h4j3k2l1",
+                "time": "2023-03-30 08:00:00"
+            },
+            "output": { "status": "success" }
+        }
+    ],
+    "expected_final_ai_response_after_all_apis": "Your business trip is planned: Beijing Hilton Hotel booked, check-in added to agenda, meeting with boss scheduled and confirmed, and an alarm set for your departure day."
+  }
+]

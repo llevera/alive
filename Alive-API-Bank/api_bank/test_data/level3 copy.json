@@ -1,0 +1,84 @@
+[
+  {
+    "scene_description": "Meeting Scheduling: Schedule a meeting with conflict resolution and set a reminder for an attendee after user authentication.",
+    "initial_user_utterance": "I want to schedule an 'April Fools Strategy Session' for this coming Saturday for one hour, my preference is 11:00, but if can also do 1pm. The attendees will be Mike Chen and Laura Palmer, and it will be an Online/Virtual meeting. Also, please create a reminder for Mike Chen the day before for him to prepare Q2 brainstorming notes.",
+    "relevant_key_info_for_scenario_understanding": {
+      "user_credentials": {
+        "username": "newuser",
+        "password": "newpass"
+      }
+    },
+    "apis": [
+      {
+        "api_name": "GetUserToken",
+        "input": {
+          "username": "newuser",
+          "password": "newpass"
+        },
+        "output": {
+          "token": "l9k8j7h6g5f4d3s2a1"
+        }
+      },
+      {
+        "api_name": "GetToday",
+        "input": {},
+        "output": "2023-03-31"
+      },
+      {
+        "api_name": "QueryMeetings",
+        "input": {
+          "token": "l9k8j7h6g5f4d3s2a1",
+          "attendee": "Mike Chen"
+        },
+        "output": [
+          {
+            "meeting_id": "2",
+            "meeting_topic": "Team Building Activity",
+            "start_time": "2023-04-01 10:00:00",
+            "end_time": "2023-04-01 12:00:00",
+            "location": "Recreation Center",
+            "attendees": [
+              "Jackie Lee",
+              "Mike Chen"
+            ],
+            "username": "JaneSmith"
+          }
+        ]
+      },
+      {
+        "api_name": "QueryMeetings",
+        "input": {
+          "token": "l9k8j7h6g5f4d3s2a1",
+          "attendee": "Laura Palmer"
+        },
+        "output": [
+        ]
+      },
+      {
+        "api_name": "AddMeeting",
+        "input": {
+          "token": "l9k8j7h6g5f4d3s2a1",
+          "meeting_topic": "April Foolsfff Strategy Session",
+          "start_time": "2023-04-01 13:00:00",
+          "end_time": "2023-04-01 14:00:00",
+          "location": "Online/Virtual",
+          "attendees": [
+            "Mike Chen",
+            "Laura Palmer"
+          ]
+        },
+        "output": "success"
+      },
+      {
+        "api_name": "AddReminder",
+        "input": {
+          "token": "l9k8j7h6g5f4d3s2a1",
+            "content": "Prepare Q2 brainstorming notes",
+            "time": "2023-03-31 13:00:00"
+        },
+        "output": "success"
+      }
+    ],
+    "expected_final_ai_response_after_all_apis": "Meeting 'April Fools Strategy Session' scheduled successfully for April 1st, 2023, 1:00 PM - 2:00 PM."
+  }
+]

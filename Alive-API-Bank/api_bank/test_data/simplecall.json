@@ -1,0 +1,330 @@
+[
+  {
+    "scene_description": "ME Test (Example 1): User ambiguously states they are 'done with their bank account'. LLM might misinterpret 'sort it out' as a direct delete instruction rather than querying details or providing closure info first. Failure type: Misinterpretation of Intent.",
+    "initial_user_utterance": "I'm done with my bank account here, can you sort it out?",
+    "relevant_key_info_for_scenario_understanding": {
+      "user_token": "l9k8j7h6g5f4d3s2a1"
+    },
+    "apis": [
+      {
+        "api_name": "QueryBalance",
+        "input": {
+          "token": "l9k8j7h6g5f4d3s2a1"
+        },
+        "output": 1047.19,
+        "exception": null
+      }
+    ]
+  },
+  {
+    "scene_description": "ME Test (Example 2): User casually asks about an alarm ('tomorrow morning'). LLM might pick a slightly different time (e.g. 7 AM vs groundtruth 8 AM for 'morning'). Failure type: Misinterpretation of Intent (subtle parameter value).",
+    "initial_user_utterance": "Just wondering about the alarm I set for tomorrow morning.",
+    "relevant_key_info_for_scenario_understanding": {
+      "user_token": "l9k8j7h6g5f4d3s2a1",
+      "current_date_context": "Current date is Wednesday, June 4, 2025"
+    },
+    "apis": [
+      {
+        "api_name": "QueryAlarm",
+        "input": {
+          "token": "l9k8j7h6g5f4d3s2a1",
+          "time": "2025-06-05 08:00:00"
+        },
+        "output": null,
+        "exception": "You have no alarm clock at time : 2025-06-05 08:00:00"
+      }
+    ]
+  },
+  {
+    "scene_description": "ME Test (Example 4): User wants to 'clear' meetings. LLM might perform unconfirmed bulk deletion or use token as attendee instead of username. Correct API for review is QueryMeetings with correct attendee. Failure type: Misinterpretation/Parameter Misuse.",
+    "initial_user_utterance": "I want to clear my upcoming meetings for today.",
+    "relevant_key_info_for_scenario_understanding": {
+      "user_token": "l9k8j7h6g5f4d3s2a1",
+      "current_date_context": "Today is June 4, 2025",
+      "username_for_token": "testuser_ex4"
+    },
+    "apis": [
+      {
+        "api_name": "QueryMeetings",
+        "input": {
+          "token": "l9k8j7h6g5f4d3s2a1",
+          "attendee": "testuser_ex4"
+        },
+        "output": [],
+        "exception": null
+      }
+    ]
+  },
+  {
+    "scene_description": "ME Test (Example 6): User asks for information *about* an API. LLM might fail to call ToolSearch and instead try to answer directly or hallucinate. Failure type: Misinterpretation of Intent (inaction).",
+    "initial_user_utterance": "Tell me about the 'GetToday' API.",
+    "relevant_key_info_for_scenario_understanding": {},
+    "apis": [
+      {
+        "api_name": "ToolSearcher",
+        "input": {
+          "keywords": "GetToday"
+        },
+        "output": {
+          "description": "The GetToday API returns the current date.",
+          "input_parameters": {},
+          "output_parameters": {"date": {"type": "str"}}
+        },
+        "exception": null
+      }
+    ]
+  },
+  {
+    "scene_description": "FD Test (Example 8): User wants to set up a new meeting. LLM might ask for details instead of directly attempting AddMeeting if enough info is implied. Failure type: Function Disambiguation/Inaction.",
+    "initial_user_utterance": "I need to set up a new meeting for my team.",
+    "relevant_key_info_for_scenario_understanding": {
+      "user_token": "l9k8j7h6g5f4d3s2a1",
+      "current_date_context": "Current date is Wednesday, June 4, 2025",
+      "team_members_for_user": ["testuser_ex8", "member1", "member2"],
+      "default_meeting_time_preference": "2025-06-06 15:00:00",
+      "default_meeting_location": "Online"
+    },
+    "apis": [
+      {
+        "api_name": "AddMeeting",
+        "input": {
+          "token": "l9k8j7h6g5f4d3s2a1",
+          "meeting_topic": "Team Meeting",
+          "attendees": ["testuser_ex8", "member1", "member2"],
+          "start_time": "2025-06-06 15:00:00",
+          "end_time": "2025-06-06 16:00:00",
+          "location": "Online"
+        },
+        "output": {"status": "success"},
+        "exception": null
+      }
+    ]
+  },
+  {
+    "scene_description": "FD Test (Example 9): User wants to find a meeting by topic. LLM might ask for more details instead of attempting QueryMeetings with the user as attendee. Failure type: Function Disambiguation/Inaction.",
+    "initial_user_utterance": "Find the meeting about the 'Q3 Budget'.",
+    "relevant_key_info_for_scenario_understanding": {
+      "user_token": "l9k8j7h6g5f4d3s2a1",
+      "username_for_token": "testuser_ex9"
+    },
+    "apis": [
+      {
+        "api_name": "QueryMeetings",
+        "input": {
+          "token": "l9k8j7h6g5f4d3s2a1",
+          "attendee": "testuser_ex9"
+        },
+        "output": [],
+        "exception": null
+      }
+    ]
+  },
+  {
+    "scene_description": "FD Test (Example 10): User wants to change an alarm. LLM might use incorrect parameters for ModifyAlarm (e.g. wrong date) or choose AddAlarm. API: ModifyAlarm(token, from_time, to_time). Failure type: Function Disambiguation / Parameter Misuse.",
+    "initial_user_utterance": "Change the alarm for 8 AM.",
+    "relevant_key_info_for_scenario_understanding": {
+      "user_token": "l9k8j7h6g5f4d3s2a1",
+      "current_date_context": "Current date is Wednesday, June 4, 2025",
+      "existing_alarm_time_to_change": "2025-06-04 07:00:00"
+    },
+    "apis": [
+      {
+        "api_name": "ModifyAlarm",
+        "input": {
+          "token": "l9k8j7h6g5f4d3s2a1",
+          "from_time": "2025-06-04 07:00:00",
+          "to_time": "2025-06-04 08:00:00"
+        },
+        "output": null,
+        "exception": "You have no agenda at time : 2025-06-04 07:00:00"
+      }
+    ]
+  },
+  {
+    "scene_description": "FD Test (Example 11): User asks for reminder details. LLM might call QueryReminder with wrong parameters (e.g. 'time: unknown') or confuse with ModifyReminder. API: QueryReminder(token, content, time). Failure type: Function Disambiguation/Parameter Misuse.",
+    "initial_user_utterance": "Get details for my reminder about the 'Doctor's appointment'.",
+    "relevant_key_info_for_scenario_understanding": {
+      "user_token": "l9k8j7h6g5f4d3s2a1",
+      "known_reminder_time_for_doctor_appointment": "2025-06-12 10:30:00"
+    },
+    "apis": [
+      {
+        "api_name": "QueryReminder",
+        "input": {
+          "token": "l9k8j7h6g5f4d3s2a1",
+          "content": "Doctor's appointment",
+          "time": "2025-06-12 10:30:00"
+        },
+        "output": null,
+        "exception": "You have no reminder about Doctor's appointment or at time : 2025-06-12 10:30:00"
+      }
+    ]
+  },
+  {
+    "scene_description": "FD Test (Example 12): User asks for a definition. LLM might use 'keyword' instead of 'word' for Dictionary API. Failure type: Function Disambiguation (subtle parameter name).",
+    "initial_user_utterance": "Look up the definition of 'ephemeral'.",
+    "relevant_key_info_for_scenario_understanding": {},
+    "apis": [
+      {
+        "api_name": "Dictionary",
+        "input": {
+          "keyword": "ephemeral"
+        },
+        "output": {"definition": "Lasting for a very short time."},
+        "exception": null
+      }
+    ]
+  },
+  {
+    "scene_description": "FD Test (Example 13): User wants to see appointments. LLM might call GetToday first instead of QueryRegistration, or use token as patient_name. API: QueryRegistration(patient_name, date). Failure type: Function Disambiguation/Parameter Misuse.",
+    "initial_user_utterance": "I want to see my appointments for next Tuesday.",
+    "relevant_key_info_for_scenario_understanding": {
+      "user_token": "l9k8j7h6g5f4d3s2a1",
+      "current_date_context": "Current date is Wednesday, June 4, 2025",
+      "patient_name_for_token": "testuser_ex13"
+    },
+    "apis": [
+      {
+        "api_name": "QueryRegistration",
+        "input": {
+          "patient_name": "testuser_ex13",
+          "date": "2025-06-10"
+        },
+        "output": null,
+        "exception": "No appointments found."
+      }
+    ]
+  },
+  {
+    "scene_description": "FD Test (Example 14): User asks about an image. LLM might use 'url' instead of 'image_path' for ImageCaption API. Failure type: Function Disambiguation (subtle parameter name).",
+    "initial_user_utterance": "Help me with this picture, what is it?",
+    "relevant_key_info_for_scenario_understanding": {
+      "image_path": "path/to/image.jpg"
+    },
+    "apis": [
+      {
+        "api_name": "ImageCaption",
+        "input": {
+          "url": "path/to/image.jpg"
+        },
+        "output": {"caption": "A cat sitting on a mat."},
+        "exception": null
+      }
+    ]
+  },
+  {
+    "scene_description": "MP Test (Example 15): User provides natural language date/time for an alarm. LLM calls AddAlarm (correct API) but might miss parameters if API definition changes (original test assumed 'label'). API: AddAlarm(token, time). Failure type: Misuse of Parameters (if LLM tries to add label).",
+    "initial_user_utterance": "Set an alarm for my dentist appointment tomorrow at 9 in the morning.",
+    "relevant_key_info_for_scenario_understanding": {
+      "user_token": "l9k8j7h6g5f4d3s2a1",
+      "current_date_context": "Current date is Wednesday, June 4, 2025"
+    },
+    "apis": [
+      {
+        "api_name": "AddAlarm",
+        "input": {
+          "token": "l9k8j7h6g5f4d3s2a1",
+          "time": "2025-06-05 09:00:00"
+        },
+        "output": "success",
+        "exception": null
+      }
+    ]
+  },
+  {
+    "scene_description": "MP Test (Example 16): User provides booking details in natural language. LLM calls BookHotel (correct API) but groundtruth must match API spec. API: BookHotel(hotel_name, check_in_time, check_out_time, room_count, adult_count, child_count). Failure type: Misuse of Parameters.",
+    "initial_user_utterance": "Book a hotel in London for 2 nights starting next Monday for 1 person.",
+    "relevant_key_info_for_scenario_understanding": {
+      "current_date_context": "Current date is Wednesday, June 4, 2025",
+      "default_hotel_for_london": "Grand London Hotel"
+    },
+    "apis": [
+      {
+        "api_name": "BookHotel",
+        "input": {
+          "hotel_name": "Grand London Hotel",
+          "check_in_time": "2025-06-09",
+          "check_out_time": "2025-06-11",
+          "room_count": 1,
+          "adult_count": 1,
+          "child_count": 0
+        },
+        "output": "11",
+        "exception": null
+      }
+    ]
+  },
+  {
+    "scene_description": "MP Test (Example 17): User asks for balance. QueryBalance API expects only token. If LLM adds extra params, it's misuse. Groundtruth output must match actual DB state after reset. Failure type: Misuse of Parameters (if extra args sent) / Incorrect Output by API (if DB state is tricky).",
+    "initial_user_utterance": "What's my bank balance for my savings account?",
+    "relevant_key_info_for_scenario_understanding": {
+      "user_token": "l9k8j7h6g5f4d3s2a1"
+    },
+    "apis": [
+      {
+        "api_name": "QueryBalance",
+        "input": {
+          "token": "l9k8j7h6g5f4d3s2a1"
+        },
+        "output": 1047.19,
+        "exception": null
+      }
+    ]
+  },
+  {
+    "scene_description": "MP Test (Example 18): User asks to send email using person's name. SendEmail API expects 'receiver', 'subject', 'content'. LLM must map correctly. Failure type: Misuse of Parameters (e.g. wrong param names or values).",
+    "initial_user_utterance": "Send an email to Jane Smith about the report deadline.",
+    "relevant_key_info_for_scenario_understanding": {},
+    "apis": [
+      {
+        "api_name": "SendEmail",
+        "input": {
+          "receiver": "jane.smith@example.com",
+          "subject": "Report Deadline",
+          "content": "Hi Jane, please remember the report deadline is next Friday."
+        },
+        "output": {"status": "success"},
+        "exception": null
+      }
+    ]
+  },
+  {
+    "scene_description": "MP Test (Example 19): User provides health data. API RecordHealthData(user_id, time, health_data:list). LLM must format health_data correctly. Failure type: Misuse of Parameters.",
+    "initial_user_utterance": "Record my blood pressure: 120 over 80.",
+    "relevant_key_info_for_scenario_understanding": {
+      "user_id_for_token": "l9k8j7h6g5f4d3s2a1",
+      "current_date_context": "Current date is Wednesday, June 4, 2025 10:00:00"
+    },
+    "apis": [
+      {
+        "api_name": "RecordHealthData",
+        "input": {
+          "user_id": "l9k8j7h6g5f4d3s2a1",
+          "time": "2025-06-04 10:00:00",
+          "health_data": [{"name": "blood_pressure", "value": "120/80"}]
+        },
+        "output": "success",
+        "exception": null
+      }
+    ]
+  },
+  {
+    "scene_description": "MP Test (Example 20): User asks to delete a meeting by its topic. DeleteMeeting API expects a meeting_id. LLM might call DeleteMeeting (correct API) but with topic instead of ID. Failure type: Misuse of Parameters.",
+    "initial_user_utterance": "Delete the meeting with 'Project Closeout'.",
+    "relevant_key_info_for_scenario_understanding": {
+      "user_token": "l9k8j7h6g5f4d3s2a1",
+      "known_meeting_id_for_topic_Project_Closeout": "meet_pc123"
+    },
+    "apis": [
+      {
+        "api_name": "DeleteMeeting",
+        "input": {
+          "token": "l9k8j7h6g5f4d3s2a1",
+          "meeting_id": "meet_pc123"
+        },
+        "output": {"status": "deleted", "meeting_id": "meet_pc123"},
+        "exception": null
+      }
+    ]
+  }
+]

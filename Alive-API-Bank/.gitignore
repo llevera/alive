@@ -1,0 +1,57 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+build/
+dist/
+eggs/
+*.egg-info/
+*.egg
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+venv.bak/
+env.bak/
+
+# IDE and editor specific files
+.idea/            # For JetBrains IDEs (PyCharm, IntelliJ)
+.vscode/          # For VS Code (you can selectively un-ignore settings.json if shared)
+!.vscode/settings.json
+!.vscode/launch.json
+*.sublime-project
+*.sublime-workspace
+
+# macOS specific files
+.DS_Store
+
+# Windows specific files
+Thumbs.db
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Test and coverage reports
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Sensitive configuration files (IMPORTANT: Secrets should ideally be in env variables)
+# Add any local config files that might contain passwords, API keys, etc.
+# Example:
+# local_settings.py
+# credentials.json
+# *.pem
+# .envrc
+# /config.ini # If it stores secrets and isn't versioned by design
+
+# Log files
+*.log
